@@ -3,21 +3,19 @@
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
+#include <QDebug>
+#include <QMessageBox>
+#include <vdf_parser.h>
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-
-    QTranslator translator;
-    const QStringList uiLanguages = QLocale::system().uiLanguages();
-    for (const QString &locale : uiLanguages) {
-        const QString baseName = "l4d2_mod_manager_" + QLocale(locale).name();
-        if (translator.load(":/i18n/" + baseName)) {
-            a.installTranslator(&translator);
-            break;
-        }
+    QApplication app(argc, argv);
+    if (l4d2::Parser::have_this_game(QString("550"))) {
+        QString file = l4d2::Parser::get_game_file(QString("550"));
+        QMessageBox::information(nullptr, file, file);
     }
-    MainWindow w;
-    w.show();
-    return a.exec();
+
+    MainWindow windows;
+    windows.show();
+    return app.exec();
 }
